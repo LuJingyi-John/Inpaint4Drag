@@ -1,0 +1,16 @@
+# Inpainting Model Dependencies
+xformers
+diffusers
+transformers
+accelerate
+peft
+
+# UI and Utils
+gradio==3.47.1
+opencv-python==4.8.0.76
+Pillow
+numpy
+
+# Only for Evaluation
+lpips
+gdown
