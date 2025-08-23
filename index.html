@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpaint4Drag</title>
+    <link rel="icon" type="image/jpeg" href="assets/icons/visailab.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        #hero {
+            padding: 60px 0;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            color: #1a1a1a;
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 30%, #1ba1e2 60%, #0891b2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: #1f71f6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .contributors {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .contributors a {
+            color: #1f71f6;
+            text-decoration: none;
+        }
+
+        .contributors a:hover {
+            text-decoration: underline;
+        }
+
+        .contributors .black-name {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .contributors .black-name:hover {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: #4a5568;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 1px solid #4a5568;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: #1f71f6;
+            border-color: #1f71f6;
+        }
+
+        .button img {
+            width: 18px;
+            height: 18px;
+            filter: brightness(0) invert(1);
+            transition: opacity 0.3s ease;
+        }
+
+        .teaser-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .teaser-video {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #555;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 0;
+            padding: 80px 0;
+        }
+
+        /* Alternating section backgrounds */
+        #hero {
+            background-color: #ffffff;
+        }
+
+        #time-comparison {
+            background-color: #fafbfc;
+        }
+
+        #approach {
+            background-color: #ffffff;
+        }
+
+        #method {
+            background-color: #f8f9fa;
+        }
+
+        #gallery {
+            background-color: #ffffff;
+        }
+
+        .bibtex-section {
+            background-color: #fafbfc;
+            padding: 80px 0;
+        }
+
+        /* Full width sections */
+        .full-width-section {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            padding-left: calc(50vw - 50%);
+            padding-right: calc(50vw - 50%);
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .large-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .small-text {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .demo-content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .demo-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .find-code-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f71f6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .find-code-button:hover {
+            text-decoration: underline;
+        }
+
+        .arrow-circle {
+            width: 32px;
+            height: 32px;
+            background: #1f71f6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .demo-video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Physics Approach Section */
+        .approach-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .approach-video {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Method Section */
+        .method-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .method-video {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .method-content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .method-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .read-paper-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f71f6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .read-paper-button:hover {
+            text-decoration: underline;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            text-align: center;
+        }
+
+        .gallery-header {
+            margin-bottom: 80px;
+        }
+
+        .scroll-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            margin-bottom: 50px;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .gallery-item {
+            min-width: 300px;
+            border-radius: 12px;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            background: #f0f0f0;
+        }
+
+        .gallery-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* BibTeX Section */
+        .title-center {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+        }
+
+        .bibtex-container {
+            margin-bottom: 60px;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .bibtex-wrapper {
+            position: relative;
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #4a5568;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4a5568;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .copy-button:hover {
+            background: #718096;
+            transform: scale(1.1);
+        }
+
+        .copy-button img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) invert(1);
+        }
+
+        .bibtex-entry {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+            white-space: pre;
+            padding-right: 60px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+                text-align: center;
+                text-align-last: center;
+            }
+
+            .demo-section,
+            .method-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .button-container {
+                justify-content: center;
+            }
+
+            .button {
+                min-width: 120px;
+                justify-content: center;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .teaser-container {
+                grid-template-columns: 1fr;
+            }
+
+            .bibtex-wrapper {
+                padding: 20px;
+            }
+
+            .bibtex-entry {
+                padding-right: 60px;
+            }
+
+            .copy-button {
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section id="hero" class="full-width-section">
+            <div class="section-content">
+                <div class="text-content">
+                    <h1><span class="gradient-text">Inpaint4Drag</span>: Repurposing Inpainting Models<br>for Drag-Based Image Editing via Bidirectional Warping</h1>
+                    <h2>ICCV 2025</h2>
+                    <p class="contributors">
+                        <span class="black-name">Jingyi Lu</span>,
+                        <a href="https://www.kaihan.org/" target="_blank" class="text-link">Kai Han</a><sup>†</sup>
+                        <br>
+                        <span class="affiliation"><a href="https://visailab.github.io/index.html" target="_blank" class="text-link">Visual AI Lab</a>, The University of Hong Kong</span><br>
+                        <sup>†</sup>Corresponding author
+                    </p>
+                    
+                    <div class="button-container">
+                        <a href="#" target="_blank" class="button" download="Inpaint4Drag.pdf">
+                            <img src="assets/icons/pdf-icon.svg" alt="Paper Icon">
+                            Paper
+                        </a>
+                        <a href="#" target="_blank" class="button">
+                            <img src="assets/icons/arxiv-icon.svg" alt="arXiv Icon">
+                            arXiv
+                        </a>
+                        <a href="#" target="_blank" class="button">
+                            <img src="assets/icons/github-icon.svg" alt="Code Icon">
+                            Code
+                        </a>
+                        <a href="https://colab.research.google.com/drive/1fzoyNzcJNZjM1_08FE9V2V20EQxGf4PH?usp=sharing" target="_blank" class="button">
+                            <img src="assets/icons/demo-icon.svg" alt="Demo Icon">
+                            Demo
+                        </a>
+                        <a href="#gallery" class="button">
+                            <img src="assets/icons/gallery-icon.svg" alt="Gallery Icon">
+                            Gallery
+                        </a>
+                        <a href="#bibtex" class="button">
+                            <img src="assets/icons/bibtex-icon.svg" alt="Bibtex Icon">
+                            BibTeX
+                        </a>
+                    </div>
+
+                    <div class="teaser-container">
+                        <video class="teaser-video" autoplay muted loop playsinline>
+                            <source src="assets/videos/demo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <p class="description">
+                        <span class="gradient-text">Inpaint4Drag</span> introduces a novel framework that decomposes drag-based editing into pixel-space bidirectional warping and image inpainting. 
+                        Our method achieves <span style="color: #1f71f6;">real-time warping previews (0.01s)</span> and 
+                        <span style="color: #1f71f6;">efficient inpainting (0.3s)</span> at 512×512 resolution, 
+                        significantly improving interaction experience while serving as an adapter for any inpainting model.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="time-comparison" class="full-width-section">
+            <div class="section-content">
+                <div class="demo-section">
+                    <div class="demo-content">
+                        <h2>Real-time Interactive Editing</h2>
+                        <p>Our bidirectional warping algorithm provides immediate visual feedback with real-time previews (0.01s), followed by efficient inpainting (0.3s). This is <span style="color: #1f71f6;">14× faster than FastDrag</span> and nearly <span style="color: #1f71f6;">600× faster than DragDiffusion</span>.</p>
+                        <a href="https://colab.research.google.com/drive/1fzoyNzcJNZjM1_08FE9V2V20EQxGf4PH?usp=sharing" target="_blank" class="find-code-button">
+                            <span class="arrow-circle">→</span> Try our demo
+                        </a>
+                    </div>
+                    <video class="demo-video" autoplay muted loop playsinline>
+                        <source src="assets/videos/time_compare.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="approach" class="full-width-section">
+            <div class="section-content">
+                <div class="section-header">
+                    <h2 class="large-header">Physics-Inspired Deformation Framework</h2>
+                    <p class="small-text">Our approach treats image regions as elastic materials, enabling natural transformations through user-specified control points and region masks.</p>
+                </div>
+            
+                <div class="approach-container">
+                    <video class="approach-video" autoplay muted loop playsinline>
+                        <source src="assets/videos/examples.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <section id="method" class="full-width-section">
+            <div class="section-content">
+                <div class="method-section">
+                    <video class="method-video" autoplay muted loop playsinline>
+                        <source src="assets/videos/bi-warp.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="method-content">
+                        <h2>Bidirectional Warping Algorithm</h2>
+                        <p>Our core innovation lies in decomposing drag-based editing into pixel-space bidirectional warping and standard image inpainting. We establish <span style="color: #1f71f6;">dense pixel correspondences</span> through forward warping for initial contours and backward mapping for complete coverage, ensuring smooth deformation without artifacts.</p>
+                        <a href="#" target="_blank" class="read-paper-button">
+                            <span class="arrow-circle">→</span> Read the paper
+                        </a>
+                    </div>  
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="full-width-section">
+            <div class="section-content">
+                <div class="gallery-section">
+                    <div class="gallery-header">
+                        <h2 class="large-header"><span class="gradient-text">Inpaint4Drag</span> Gallery</h2>
+                        <p class="small-text">Our method demonstrates superior visual quality and precise control across various challenging scenarios, from object manipulation to large-scale occlusion handling.</p>
+                    </div>
+                
+                    <div class="scroll-container" id="scrollContainer">
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_1.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_2.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_3.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_9.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_5.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_6.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_7.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_8.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="gallery-item">
+                            <video class="gallery-video" muted playsinline>
+                                <source src="assets/videos/sample_4.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="bibtex-section full-width-section" id="bibtex">
+            <div class="section-content">
+                <h1 class="title-center">BibTeX</h1>
+                <div class="bibtex-container">
+                    <div class="bibtex-wrapper">
+                        <button class="copy-button" onclick="copyBibtex()">
+                            <img src="assets/icons/bibtex-icon.svg" alt="Copy Icon">
+                        </button>
+                        <pre class="bibtex-entry" id="bibtex-entry">@inproceedings{lu2025inpaint4drag,
+    author    = {Jingyi Lu and Kai Han},
+    title     = {Inpaint4Drag: Repurposing Inpainting Models for Drag-Based Image Editing via Bidirectional Warping},
+    booktitle = {International Conference on Computer Vision (ICCV)},
+    year      = {2025},
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Intersection Observer for video play/pause on viewport visibility
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        // 只对非gallery区域的视频使用原有的播放逻辑
+                        if (!video.classList.contains('gallery-video')) {
+                            video.play().catch(e => console.log('Video play failed:', e));
+                        }
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, {
+                threshold: 0.5 // Play when 50% of video is visible
+            });
+
+            // Observe all videos
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                videoObserver.observe(video);
+            });
+
+            // Gallery videos with 3-second pause after completion
+            const galleryVideos = document.querySelectorAll('.gallery-video');
+            galleryVideos.forEach(video => {
+                video.addEventListener('ended', function() {
+                    setTimeout(() => {
+                        if (video.offsetParent !== null) { // Check if video is still visible
+                            video.currentTime = 0;
+                            video.play().catch(e => console.log('Gallery video replay failed:', e));
+                        }
+                    }, 3000); // 3 seconds pause
+                });
+
+                // Start playing when in view
+                const galleryObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            video.play().catch(e => console.log('Gallery video play failed:', e));
+                        } else {
+                            video.pause();
+                        }
+                    });
+                }, {
+                    threshold: 0.5
+                });
+
+                galleryObserver.observe(video);
+            });
+
+            // Auto-scroll for gallery
+            const scrollContainer = document.getElementById('scrollContainer');
+            const step = 1;
+            const delay = 30;
+            let direction = 1;
+            let intervalID;
+        
+            function startScrolling() {
+                scrollContainer.scrollLeft += step * direction;
+                
+                if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth - scrollContainer.clientWidth) {
+                    direction = -1;
+                } else if (scrollContainer.scrollLeft <= 0) {
+                    direction = 1;
+                }
+            }
+        
+            function startInterval() {
+                intervalID = setInterval(startScrolling, delay);
+            }
+        
+            function stopInterval() {
+                clearInterval(intervalID);
+            }
+        
+            scrollContainer.addEventListener('mouseover', stopInterval);
+            scrollContainer.addEventListener('mouseout', startInterval);
+            scrollContainer.addEventListener('wheel', function(event) {
+                clearInterval(intervalID);
+                scrollContainer.scrollLeft += event.deltaY;
+            });
+        
+            startInterval();
+        });
+
+        function copyBibtex() {
+            const bibtexEntry = document.getElementById('bibtex-entry').innerText.trim();
+            navigator.clipboard.writeText(bibtexEntry).then(() => {
+                alert('BibTeX copied to clipboard. Thank you for citing Inpaint4Drag!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
